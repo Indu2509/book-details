@@ -1,0 +1,16 @@
+To  run application:
+
+pip install -r requirements.txt
+flask run
+
+
+To set the environment :
+
+Ubuntu : export FLASK_ENV=""
+Windows : set FLASK_ENV=""
+
+
+To add all required packages to requirements.txt:
+
+pip freeze > requirements.txt
+
