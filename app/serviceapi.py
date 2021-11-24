@@ -1,36 +1,29 @@
-from bson.objectid import ObjectId
-from pymongo import MongoClient
-from app import app
 import logging
 import json
-from flask import jsonify, request
-from flask_jwt_extended import (
-    JWTManager
+from flask import Flask, request, jsonify
 
-)
-import json
-import excel2json
-
-import os
-filePath = 'app/books-2.json'
-
-if os.path.exists(filePath):
-    os.remove(filePath)
-
-app.config['JWT_SECRET_KEY'] = 'super-secret'
-jwt = JWTManager(app)
+app = Flask(__name__)
 
 
 @app.route('/getRowsdata')
 def getRowsdata():
     rows = request.args.get('row')
+    print(rows)
     rows =int(rows)
-    excel2json.convert_from_file('app/books.xlsx')
+    import pandas as pd
+    readfile = pd.read_excel('app/books.xlsx')
+    df = pd.DataFrame(readfile)
+    js = df.to_json(orient = 'records')
 
-    jsonFile = open("app/books-2.json",)
+    
+    with open("app/books.json", "w+") as outfile:
+        outfile.write(js)
+
+
+    jsonFile = open("app/books.json",)
     data = json.load(jsonFile)
-    print(data[0:rows])
-    return jsonify(data=data[0:rows])
+    return jsonify(data=data[:rows])
+    
 
 @app.route('/getRequestedKeydata')
 def getRequestedKeydata():
@@ -38,8 +31,17 @@ def getRequestedKeydata():
     keyvalue = json.loads(keyvalue)
     key =list(keyvalue.keys())
     value = keyvalue[key[0]]
-    excel2json.convert_from_file('app/books.xlsx')
-    jsonFile = open("app/books-2.json",)
+    import pandas as pd
+    readfile = pd.read_excel('app/books.xlsx')
+    df = pd.DataFrame(readfile)
+    js = df.to_json(orient = 'records')
+
+    
+    with open("app/books.json", "w+") as outfile:
+        outfile.write(js)
+
+
+    jsonFile = open("app/books.json",)
     data = json.load(jsonFile)
     if(data[0].get(key[0])):
         for x in data:
@@ -47,4 +49,5 @@ def getRequestedKeydata():
                 return x
     else:
         return "Key does not exist"
+
 
