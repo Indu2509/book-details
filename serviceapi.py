@@ -11,16 +11,16 @@ def getRowsdata():
     print(rows)
     rows =int(rows)
     import pandas as pd
-    readfile = pd.read_excel('app/books.xlsx')
+    readfile = pd.read_excel('books.xlsx')
     df = pd.DataFrame(readfile)
     js = df.to_json(orient = 'records')
 
     
-    with open("app/books.json", "w+") as outfile:
+    with open("books.json", "w+") as outfile:
         outfile.write(js)
 
 
-    jsonFile = open("app/books.json",)
+    jsonFile = open("books.json",)
     data = json.load(jsonFile)
     return jsonify(data=data[:rows])
     
@@ -32,16 +32,16 @@ def getRequestedKeydata():
     key =list(keyvalue.keys())
     value = keyvalue[key[0]]
     import pandas as pd
-    readfile = pd.read_excel('app/books.xlsx')
+    readfile = pd.read_excel('books.xlsx')
     df = pd.DataFrame(readfile)
     js = df.to_json(orient = 'records')
 
     
-    with open("app/books.json", "w+") as outfile:
+    with open("books.json", "w+") as outfile:
         outfile.write(js)
 
 
-    jsonFile = open("app/books.json",)
+    jsonFile = open("books.json",)
     data = json.load(jsonFile)
     if(data[0].get(key[0])):
         for x in data:
@@ -49,5 +49,8 @@ def getRequestedKeydata():
                 return x
     else:
         return "Key does not exist"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int("5000"), debug=True)
 
 
